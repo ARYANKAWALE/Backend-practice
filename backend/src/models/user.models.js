@@ -29,7 +29,6 @@ userSchema.methods.generateAccessToken = function () {
         username: this.username,
         fullname: this.fullname,
         email: this.email,
-        password: this.password
     },
         process.env.ACCESS_TOKEN_SECRET,
         {
@@ -49,6 +48,8 @@ userSchema.methods.generateRefreshToken = function () {
         }
     )
 }
+
+
 
 
 export const User = mongoose.model("User", userSchema)

@@ -4,6 +4,7 @@ import env from "dotenv"
 import { dbConnect } from "./src/db/index.js"
 import cookieParser from "cookie-parser"
 import userRouter from "./src/routes/user.routes.js"
+import todoRouter from "./src/routes/todo.routes.js"
 import cors from "cors"
 env.config()
 dbConnect()
@@ -17,6 +18,7 @@ app.use(cors({
     credentials: true
 }))
 app.use("/api/v4/users", userRouter)
+app.use("/api/v4/todos", todoRouter)
 
 // app.post('/todo', async (req, res) => {
 //     const data = req.body

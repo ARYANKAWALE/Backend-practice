@@ -2,7 +2,6 @@ import { Router } from "express"
 import { registerUser ,loginUser, logOutUser} from "../controllers/user.controllers.js"
 import { VerifyJWT } from "../middleware/auth.middleware.js"
 
-
 const router = Router()
 
 router.route("/register").post(registerUser)
