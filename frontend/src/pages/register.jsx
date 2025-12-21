@@ -46,7 +46,8 @@ const Register = () => {
     } catch (error) {
       console.error("Error:", error)
       // Show the specific error message from backend (ApiError)
-      showToast(error.response?.data?.message || "Register failed", "danger")
+      showToast(error.response?.data?.message || "User already exists", "danger")
+      setTimeout((n=>navigate("/login")),2000)
     }
   };
 
@@ -126,7 +127,7 @@ const Register = () => {
           Register
         </button>
         <div className="flex justify-center text-black">
-          <p>Have an Account?<Link to="/login" className="text-blue-500">Login</Link></p>
+          <p>Have an Account?<Link to="/login" className="text-blue-500 hover:underline no-underline">Login</Link></p>
         </div>
       </form>
     </div>

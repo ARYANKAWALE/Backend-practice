@@ -64,9 +64,12 @@ app.use("/api/v4/todos", todoRouter)
 
 
 
-app.get('/', (req, res) => {
-    res.send("Hello User")
-})
+// app.get('/', (req, res) => {
+//     res.status(200).json({
+//         message: "Server is running perfectly! 🚀",
+//         success: true
+//     })
+// })
 
 app.listen(process.env.PORT || 4000, () => {
     console.log(`Server is running on port ${process.env.PORT}`)

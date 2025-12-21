@@ -12,12 +12,12 @@ const todoSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    subtodo: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Subtodo"
-        }
-    ],
+    // subtodo: [
+    //     {
+    //         type: mongoose.Schema.Types.ObjectId,
+    //         ref: "Subtodo"
+    //     }
+    // ],
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
