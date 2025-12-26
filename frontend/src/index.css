@@ -6,4 +6,8 @@
     html {
         font-family: theme('fontFamily.sans');
     }
+
+    body {
+        @apply bg-black text-white;
+    }
 }

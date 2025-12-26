@@ -34,7 +34,7 @@ const Login = () => {
             );
             console.log("Login Success:", response.data);
             showToast("Login Successful! 🎉");
-            navigate("/home");
+            navigate("/");
         } catch (error) {
             console.error("Login Error:", error);
             showToast(error.response?.data?.message || "Login failed", "danger");
@@ -50,7 +50,8 @@ const Login = () => {
                             <div className="toast-body">
                                 {toast.message}
                             </div>
-                            <button type="button" className="btn-close btn-close-white me-2 m-auto" onClick={() => setToast({ ...toast, show: false })} aria-label="Close"></button>
+                            <button type="button" className="btn-close btn-close-white me-2 m-auto" 
+                            onClick={() => setToast({ ...toast, show: false })} aria-label="Close"></button>
                         </div>
                     </div>
                 </div>

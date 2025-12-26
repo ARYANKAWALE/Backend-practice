@@ -30,10 +30,10 @@ const Register = () => {
     try {
       // 2. The API Call
       const response = await axios.post(
-        "http://localhost:4000/api/v4/users/register", // Your Backend URL
-        data, // The data (username, password)
+        "http://localhost:4000/api/v4/users/register", 
+        data, 
         {
-          withCredentials: true // 3. IMPORTANT: Allows the backend to set cookies
+          withCredentials: true 
         }
       )
 

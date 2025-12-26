@@ -5,8 +5,6 @@ import { asyncHandler } from "../utils/asyncHandler.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 
 
-
-
 const generateAccessAndRefreshToken = async (userId) => {
     try {
         const user = await User.findById(userId)
@@ -124,6 +122,16 @@ const logOutUser = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, {}, "User logged out successfully"))
 })
 
+const getCurrentUser = asyncHandler(async (req, res) => {
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            req.user,
+            "User fetched successfully"
+        )
+    )
+})
 
 
-export { registerUser, loginUser, logOutUser }
+
+export { registerUser, loginUser, logOutUser, getCurrentUser }
