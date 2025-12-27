@@ -1,25 +1,27 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrashCan } from '@fortawesome/free-solid-svg-icons'
+import toast from 'react-hot-toast'
 
 const EditTodo = () => {
     const { id } = useParams()
-    const navigate = useNavigate() // User ko wapas bhejne ke liye
+    const navigate = useNavigate()
 
     const [headline, setHeadline] = useState('')
     const [content, setContent] = useState('')
     const [initialHeadline, setInitialHeadline] = useState('')
     const [initialContent, setInitialContent] = useState('')
-    const [loading, setLoading] = useState(true) // Loading state taki blank form na dikhe
+    const [loading, setLoading] = useState(true)
+    const [deleting, setDeleting] = useState(false)
 
-    // 1. Purana Data Fetch karne ka logic
     const fetchTodo = async () => {
         try {
             const response = await axios.get(`http://localhost:4000/api/v4/todos/${id}`, {
                 withCredentials: true
             })
             console.log("Fetched Todo:", response.data)
-            // Data aate hi state me set kar do
             setHeadline(response.data.data.headline)
             setContent(response.data.data.content)
             setInitialHeadline(response.data.data.headline)
@@ -27,6 +29,7 @@ const EditTodo = () => {
             setLoading(false)
         } catch (error) {
             console.log("Error fetching todo", error)
+            toast.error("Failed to load todo")
             setLoading(false)
         }
     }
@@ -35,24 +38,66 @@ const EditTodo = () => {
         fetchTodo()
     }, [id])
 
-    // 2. Naya Data Database me Update karne ka logic
     const handleUpdate = async (e) => {
         e.preventDefault()
+
+        const updatePromise = axios.patch(`http://localhost:4000/api/v4/todos/modify/${id}`, {
+            headline: headline,
+            content: content
+        }, {
+            withCredentials: true
+        })
+
+        toast.promise(
+            updatePromise,
+            {
+                loading: 'Updating todo...',
+                success: 'Todo updated successfully!',
+                error: 'Failed to update todo',
+            }
+        )
+
         try {
-            // Yaha PUT request jayegi naye data ke sath
-            const response = await axios.patch(`http://localhost:4000/api/v4/todos/modify/${id}`, {
-                headline: headline,
-                content: content
-            }, {
-                withCredentials: true
-            })
-
+            const response = await updatePromise
             console.log("Update Success:", response.data)
-
-            // Update hone ke baad wapas Home page ya List page pe bhej do
-            navigate('/')
+            setTimeout(() => navigate('/'), 1000)
         } catch (error) {
             console.log("Error updating todo", error)
+        }
+    }
+
+    const handleDeleteTodo = async (id) => {
+        const confirmDelete = window.confirm(
+            "Are you sure you want to delete this todo? This action cannot be undone."
+        )
+
+        if (!confirmDelete) return
+
+        setDeleting(true)
+
+        const deletePromise = axios.delete(`http://localhost:4000/api/v4/todos/modify/${id}`, {
+            withCredentials: true
+        })
+
+        toast.promise(
+            deletePromise,
+            {
+                loading: 'Deleting todo...',
+                success: 'Todo deleted successfully!',
+                error: (err) => {
+                    const errorMessage = err.response?.data?.message || 'Failed to delete todo. Please try again.'
+                    return errorMessage
+                },
+            }
+        )
+
+        try {
+            await deletePromise
+            setTimeout(() => navigate("/"), 1000)
+        } catch (error) {
+            console.error("Error deleting todo:", error)
+        } finally {
+            setDeleting(false)
         }
     }
 
@@ -65,49 +110,67 @@ const EditTodo = () => {
     )
 
     return (
-        <div className="min-h-screen bg-black text-white flex justify-center items-center p-4">
-            <div className='bg-gray-900 p-8 rounded-2xl shadow-xl w-full max-w-[70vh] border border-gray-800'>
-                <h1 className="text-3xl font-bold mb-6 text-center text-blue-500">Edit Todo</h1>
-
+        <div className="min-h-screen bg-[#fafafa] text-black flex justify-center items-center p-4">
+            <div className='bg-[#fdfdfd] rounded-2xl shadow-xl w-full max-w-[70vh] p-8'>
+                <div className='absolute top-1/2 flex gap-2 relative'>
+                    <div className='w-4 h-4 bg-red-500 rounded-full'></div>
+                    <div className='w-4 h-4 bg-yellow-500 rounded-full'></div>
+                    <div className='w-4 h-4 bg-green-500 rounded-full'></div>
+                </div>
+                <div className='flex justify-between items-center mb-6'>
+                    <h1 className="text-3xl font-bold text-center text-blue-500">Edit Todo</h1>
+                    <FontAwesomeIcon
+                        icon={faTrashCan}
+                        className={`hover:text-red-500 transition-colors text-3xl ${deleting
+                            ? 'opacity-50 cursor-not-allowed animate-pulse'
+                            : 'cursor-pointer'
+                            }`}
+                        onClick={() => !deleting && handleDeleteTodo(id)}
+                        title={deleting ? "Deleting..." : "Delete Todo"}
+                    />
+                </div>
                 <form onSubmit={handleUpdate} className="flex flex-col gap-4">
 
-                    {/* Headline Input */}
                     <div className="flex flex-col gap-2">
                         <label className="text-gray-400 text-sm">Headline</label>
                         <input
                             type="text"
-                            value={headline} // Ye zaroori hai taki purana data dikhe
+                            value={headline}
                             onChange={(e) => setHeadline(e.target.value)}
-                            className="bg-gray-800 border border-gray-700 text-white p-3 rounded-lg focus:outline-none focus:border-blue-500 transition-colors"
+                            className="bg-gray-200 text-black p-3 rounded-lg focus:outline-none focus:border-blue-500 transition-colors"
                             placeholder="Enter Headline"
+                            disabled={deleting}
                         />
                     </div>
 
-                    {/* Content Input */}
                     <div className="flex flex-col gap-2">
                         <label className="text-gray-400 text-sm">Content</label>
                         <textarea
-                            value={content} // Ye zaroori hai
+                            value={content}
                             onChange={(e) => setContent(e.target.value)}
                             rows="6"
-                            className="bg-gray-800 border border-gray-700 text-white p-3 rounded-lg focus:outline-none focus:border-blue-500 transition-colors resize-none"
+                            className="bg-gray-200 text-black p-3 rounded-lg focus:outline-none focus:border-blue-500 transition-colors resize-none"
                             placeholder="Enter Content"
+                            disabled={deleting}
                         />
                     </div>
 
-                    {/* Action Buttons */}
                     <div className="flex gap-4 mt-4">
                         <button
                             type="button"
                             onClick={() => navigate('/')}
                             className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded-lg transition-all"
+                            disabled={deleting}
                         >
                             Cancel
                         </button>
                         <button onClick={handleUpdate}
                             type="submit"
-                            disabled={!isChanged}
-                            className={`flex-1 font-bold py-3 rounded-lg transition-all shadow-lg ${isChanged ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-blue-500/30' : 'bg-gray-600 text-gray-400 cursor-not-allowed'}`}
+                            disabled={!isChanged || deleting}
+                            className={`flex-1 font-bold py-3 rounded-lg transition-all shadow-lg ${isChanged && !deleting
+                                ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-blue-500/30'
+                                : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                                }`}
                         >
                             Update Todo
                         </button>

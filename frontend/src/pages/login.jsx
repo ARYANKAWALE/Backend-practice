@@ -50,8 +50,8 @@ const Login = () => {
                             <div className="toast-body">
                                 {toast.message}
                             </div>
-                            <button type="button" className="btn-close btn-close-white me-2 m-auto" 
-                            onClick={() => setToast({ ...toast, show: false })} aria-label="Close"></button>
+                            <button type="button" className="btn-close btn-close-white me-2 m-auto"
+                                onClick={() => setToast({ ...toast, show: false })} aria-label="Close"></button>
                         </div>
                     </div>
                 </div>
@@ -87,11 +87,11 @@ const Login = () => {
                 </div>
                 <button
                     type="submit"
-                    className="p-2 bg-blue-600 rounded hover:bg-blue-700 transition-colors">
+                    className="p-2 bg-blue-600 rounded hover:bg-blue-700 transition-colors hover:shadow-md">
                     Submit
                 </button>
                 <div className="flex justify-center text-black">
-                    <p>Don't have an Account?<Link to="/register" className="text-blue-500">Register</Link></p>
+                    <p>Don't have an Account?<Link to="/register" className="text-blue-500 hover:underline no-underline">Register</Link></p>
                 </div>
             </form>
         </div>

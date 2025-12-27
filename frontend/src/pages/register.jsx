@@ -26,28 +26,35 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Check for empty fields first
+    if (data.username === "" || data.fullname === "" || data.email === "" || data.password === "") {
+      showToast("All fields are required!", "danger");
+      return; // Stop execution if validation fails
+    }
+
     console.log("Submitting:", data);
     try {
-      // 2. The API Call
       const response = await axios.post(
-        "http://localhost:4000/api/v4/users/register", 
-        data, 
+        "http://localhost:4000/api/v4/users/register",
+        data,
         {
-          withCredentials: true 
+          withCredentials: true
         }
-      )
+      );
 
-      console.log("Success:", response.data)
-      showToast("Register Successful! 🎉", "success")
-
-      // Optional: Redirect to login page later
-      setTimeout(() => navigate("/login"), 2000)
+      if (response.data.success) {
+        console.log("Success:", response.data);
+        showToast("Register Successful!", "success");
+        setTimeout(() => navigate("/login"), 2000);
+      } else {
+        console.log("Failed:", response.data);
+        showToast("Register Failed!", "danger");
+      }
 
     } catch (error) {
-      console.error("Error:", error)
-      // Show the specific error message from backend (ApiError)
-      showToast(error.response?.data?.message || "User already exists", "danger")
-      setTimeout((n=>navigate("/login")),2000)
+      console.error("Error:", error);
+      showToast(error.response?.data?.message || "User already exists", "danger");
     }
   };
 
@@ -99,7 +106,7 @@ const Register = () => {
         <div className="flex flex-col text-black">
           <label htmlFor="email">Email</label>
           <input
-            type="text"
+            type="email"
             name="email"
             id="email"
             value={data.email}
