@@ -12,6 +12,7 @@ const Register = () => {
   });
 
   const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
+  const [ message,setMessage] = useState("")
 
   const navigate = useNavigate()
 
@@ -31,6 +32,11 @@ const Register = () => {
     if (data.username === "" || data.fullname === "" || data.email === "" || data.password === "") {
       showToast("All fields are required!", "danger");
       return; // Stop execution if validation fails
+    }
+
+    if(data.password.length < 6){
+      setMessage("Password must be at least 6 characters long", "danger");
+      return;
     }
 
     console.log("Submitting:", data);
@@ -126,6 +132,7 @@ const Register = () => {
             className="p-2 rounded  border border-gray-600 focus:outline-none focus:border-blue-500"
             placeholder="Enter password"
           />
+          <p className="text-red-500 text-sm">{message}</p>
         </div>
         <button
           type="submit"

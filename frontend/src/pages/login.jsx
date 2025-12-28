@@ -11,6 +11,7 @@ const Login = () => {
     const navigate = useNavigate();
 
     const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
+    const [message, setMessage] = useState("");
 
     const showToast = (message, type = 'success') => {
         setToast({ show: true, message, type });
@@ -37,7 +38,16 @@ const Login = () => {
             navigate("/");
         } catch (error) {
             console.error("Login Error:", error);
-            showToast(error.response?.data?.message || "Login failed", "danger");
+            if (error.response?.status === 404 || error.response?.status === 401) {
+                setMessage("User does not exist or incorrect password", "danger");
+                setTimeout(()=>navigate("/Register"),2000)
+            }
+            else if (error.response?.data?.message) {
+                setMessage(error.response.data.message, "danger");
+            }
+            else {
+                showToast("Login failed", "danger");
+            }
         }
     };
 
@@ -84,6 +94,7 @@ const Login = () => {
                         className="p-2 rounded border border-gray-600 focus:outline-none focus:border-blue-500"
                         placeholder="Enter password"
                     />
+                    <p className="text-red-500 text-sm">{message}</p>
                 </div>
                 <button
                     type="submit"

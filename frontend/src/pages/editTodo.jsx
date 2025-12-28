@@ -104,24 +104,30 @@ const EditTodo = () => {
     const isChanged = headline !== initialHeadline || content !== initialContent
 
     if (loading) return (
-        <div className="min-h-screen bg-black text-white flex justify-center items-center">
+        <div className="min-h-screen text-black flex justify-center items-center">
             <div className="text-xl">Loading Todo...</div>
         </div>
     )
 
     return (
         <div className="min-h-screen bg-[#fafafa] text-black flex justify-center items-center p-4">
-            <div className='bg-[#fdfdfd] rounded-2xl shadow-xl w-full max-w-[70vh] p-8'>
-                <div className='absolute top-1/2 flex gap-2 relative'>
-                    <div className='w-4 h-4 bg-red-500 rounded-full'></div>
-                    <div className='w-4 h-4 bg-yellow-500 rounded-full'></div>
-                    <div className='w-4 h-4 bg-green-500 rounded-full'></div>
-                </div>
-                <div className='flex justify-between items-center mb-6'>
+            <div className='bg-[#fdfdfd] rounded-2xl shadow-xl w-full max-w-[70vh] pb-8'>
+                <div className='flex gap-2 bg-gray-500 p-2 rounded-tr-2xl rounded-tl-2xl'>
+                        <div className='w-4 h-4 bg-red-500 rounded-full flex items-center justify-center group cursor-pointer hover:bg-red-600 transition-colors'>
+                            <span className='hidden group-hover:block text-[10px] font-bold text-red-900'>×</span>
+                        </div>
+                        <div className='w-4 h-4 bg-yellow-500 rounded-full flex items-center justify-center group cursor-pointer hover:bg-yellow-600 transition-colors'>
+                            <span className='hidden group-hover:block text-[10px] font-bold text-yellow-900'>−</span>
+                        </div>
+                        <div className='w-4 h-4 bg-green-500 rounded-full flex items-center justify-center group cursor-pointer hover:bg-green-600 transition-colors'>
+                            <span className='hidden group-hover:block text-[10px] font-bold text-green-900'>+</span>
+                        </div>
+                    </div>
+                <div className='flex justify-between items-center mb-6 pl-6 pr-6 pt-2'>
                     <h1 className="text-3xl font-bold text-center text-blue-500">Edit Todo</h1>
                     <FontAwesomeIcon
                         icon={faTrashCan}
-                        className={`hover:text-red-500 transition-colors text-3xl ${deleting
+                        className={`hover:text-red-500 transition-colors text-gray-500 text-3xl ${deleting
                             ? 'opacity-50 cursor-not-allowed animate-pulse'
                             : 'cursor-pointer'
                             }`}
@@ -131,7 +137,7 @@ const EditTodo = () => {
                 </div>
                 <form onSubmit={handleUpdate} className="flex flex-col gap-4">
 
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-2 pl-6 pr-6">
                         <label className="text-gray-400 text-sm">Headline</label>
                         <input
                             type="text"
@@ -143,7 +149,7 @@ const EditTodo = () => {
                         />
                     </div>
 
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-2 pl-6 pr-6">
                         <label className="text-gray-400 text-sm">Content</label>
                         <textarea
                             value={content}
@@ -155,7 +161,7 @@ const EditTodo = () => {
                         />
                     </div>
 
-                    <div className="flex gap-4 mt-4">
+                    <div className="flex gap-4 mt-4 pl-6 pr-6">
                         <button
                             type="button"
                             onClick={() => navigate('/')}
