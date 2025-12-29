@@ -37,14 +37,14 @@ const profile = () => {
 
 
     return (
-        <div className='min-h-screen bg-white text-black flex justify-center items-center p-4'>
-            <div className='bg-[#fdfdfd] p-4 rounded-lg border-2 border-black'>
+        <div className='min-h-screen bg-white text-black flex justify-center items-center'>
+            <div className='bg-[#fdfdfd] p-4 text-sm rounded-lg w-[100vw] h-auto md:w-[30vw] md:h-auto justify-center items-center overflow-hidden border'>
                 <label htmlFor="username" className='text-sm font-bold'>Username</label>
                 <p className='text-2xl border rounded p-2'>{user?.username}</p>
                 <label htmlFor="fullname" className='text-sm font-bold'>Fullname</label>
                 <p className='text-xl border rounded p-2'>{user?.fullname}</p>
                 <label htmlFor="email" className='text-sm font-bold'>Email</label>
-                <p className='text-lg border rounded p-2'>{user?.email}</p>
+                <p className='text-lg border rounded p-2 overflow-hidden'>{user?.email}</p>
                 
                 <p className='text-lg rounded p-2 mb-4'>User Created At: <br />
                     {user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-IN', {

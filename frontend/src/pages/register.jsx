@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import registerBg from '../assets/images/registerbg.png'
 
 const Register = () => {
   const [data, setData] = useState({
@@ -12,7 +13,7 @@ const Register = () => {
   });
 
   const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
-  const [ message,setMessage] = useState("")
+  const [message, setMessage] = useState("")
 
   const navigate = useNavigate()
 
@@ -34,7 +35,7 @@ const Register = () => {
       return; // Stop execution if validation fails
     }
 
-    if(data.password.length < 6){
+    if (data.password.length < 6) {
       setMessage("Password must be at least 6 characters long", "danger");
       return;
     }
@@ -66,6 +67,7 @@ const Register = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#fafafa] text-white relative">
+      <img src={registerBg} alt="background" className='absolute top-0 left-0 w-full h-full object-cover -z-0' />
       {/* Bootstrap Toast */}
       {toast.show && (
         <div className="position-fixed top-0 end-0 p-3" style={{ zIndex: 11 }}>
@@ -82,7 +84,7 @@ const Register = () => {
 
       <form
         onSubmit={handleSubmit}
-        className="flex gap-4 flex-col p-8 border border-gray-300 bg-[#ffffffaa] rounded-lg min-w-[400px]"
+        className="flex gap-4 flex-col p-8 border border-gray-300 bg-[#ffffffaa] rounded-lg min-w-[400px] relative z-10"
       >
         <h1 className="text-2xl font-bold mb-4 text-black text-center">Register</h1>
         <div className="flex flex-col text-black">

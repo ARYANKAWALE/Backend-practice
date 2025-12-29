@@ -3,7 +3,7 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import avatar from "../assets/images/image.png"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGear } from '@fortawesome/free-solid-svg-icons'
+import { faGear, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom'
 import toast from 'react-hot-toast'
 
@@ -14,8 +14,8 @@ const Home = () => {
     const [loading, setLoading] = useState(true)
     const [user, setUser] = useState(null)
     const [isOpen, setIsOpen] = useState(false)
-    // const [isClose, setIsClose] = useState(false)
     const [theme, setTheme] = useState("dark")
+    const [query, setQuery] = useState("");
 
     const fetchTodos = async () => {
         try {
@@ -69,43 +69,56 @@ const Home = () => {
 
     }
 
-    // const handleDeleteTodo= async(id)=>{
-    //     try {
-    //         await axios.delete(`http://localhost:4000/api/v4/todos/${id}`, {
-    //             withCredentials: true
-    //         })
-    //         alert("Todo deleted successfully!")
-    //         navigate("/")
-    //     } catch (error) {
-    //         console.log("Error deleting todo", error)
-    //     }
-    // }    
-
     const handleThemeChange = () => {
-        // setTheme(theme === "dark" ? "light" : "dark")
         toast("This feature coming Soon!")
-        // if (theme === "dark") {
-        //     document.documentElement.classList.add("dark")
-        // } else {
-        //     document.documentElement.classList.remove("dark")
-        // }
     }
 
 
+    useEffect(() => {
+        const searchTodos = async () => {
+            if (query.length > 0) {
+                try {
+                    const res = await axios.get(`http://localhost:4000/api/v4/todos/search?search=${query}`, {
+                        withCredentials: true
+                    });
+                    setTodos(res.data.data);
+                } catch (error) {
+                    console.log("Error:", error);
+                }
+            } else {
+                fetchTodos();
+            }
+        };
+        const timer = setTimeout(() => {
+            searchTodos();
+        }, 500)
+        return () => {
+            clearTimeout(timer)
+        }
+    }, [query])
+
 
     return (
-        <div className="relative min-h-screen w-full flex justify-center items-start bg-gray-100 text-black p-4">
-            <div className='overflow-y-auto scrollbar-hidden "overflow-y-scroll [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] pb-10'>
-                <div className="flex justify-between items-center mb-6 pl-6 pr-6">
-                    <div className='flex gap-2 items-center flex-col pt-2'>
-                        <h2 className="text-3xl font-bold text-black">Hello {user?.username}👋</h2>
-                        <h2 className="text-xl font-bold text-black">Simplify. Focus. Achieve</h2>
+        <div className="relative min-h-screen w-full flex justify-center items-start bg-gray-100 text-black p-4 overflow-hidden">
+            <div className='overflow-y-auto scrollbar-hidden pb-10'>
+                <div className="flex flex-col md:flex-row justify-between items-center mb-6 pl-6 pr-6">
+                    <div className="flex gap-5 items-center justify-between">
+                        <div className='flex'>
+                            <h2 className=" text-lg md:text-3xl font-bold text-black">Hello {user?.username}👋</h2>
+                        </div>
+                        <div className='flex gap-2 items-center'>
+                            <img className='w-10 h-10 rounded-full' src={avatar} alt='avatar' />
+                            <FontAwesomeIcon icon={faGear} onClick={() => setIsOpen(!isOpen)} className={`text-gray-400 text-3xl transition-all duration-300 ${isOpen ? 'rotate-90' : ''}`} />
+                        </div>
+                    </div>
+                    <div className="flex gap-2 items-center md:items-center">
+                        <input type="search" placeholder="Search Todo" value={query} onChange={(e) => setQuery(e.target.value)} className="w-72 p-2 rounded border-none focus:outline-none focus:border-blue-500 
+                         transition transition-all duration-300 animate-right" />
+                        <FontAwesomeIcon icon={faMagnifyingGlass} className='p-2 rounded bg-blue-500 text-white border-none outline-none' />
                     </div>
                     <div className='flex gap-2 items-center'>
-                        <img className='w-10 h-10 rounded-full' src={avatar} alt='avatar' />
-                        <FontAwesomeIcon icon={faGear} onClick={() => setIsOpen(!isOpen)} className={`text-gray-400 text-3xl transition-all duration-300 ${isOpen ? 'rotate-90' : ''}`} />
                         {isOpen && (
-                            <div className="absolute right-16 top-16 w-48 bg-[#fdfdfd] text-black p-4 rounded-lg shadow-xl border border-[#757575] z-50 flex flex-col items-center">
+                            <div className="absolute left-44 top-16 w-48 bg-[#fdfdfd] text-black p-4 rounded-lg shadow-xl border border-[#757575] z-50 flex flex-col items-center">
                                 <div className="mt-2">
                                     <Link to="/profile" className="block px-5 py-2 cursor-pointer text-inherit no-underline hover:bg-gray-200 transition-all border rounded-md">Profile</Link>
                                 </div>

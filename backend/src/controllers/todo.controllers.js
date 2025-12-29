@@ -105,11 +105,36 @@ const getTodo = asyncHandler(async (req, res) => {
     )
 })
 
+const searchTodo = asyncHandler(async(req,res)=>{
+    try {
+        const { search } = req.query
+        if (!search) {
+            return res.status(200).json([]);
+        }
+
+        const todos = await todo.find({
+            headline:{
+                $regex: search,
+                $options:"i"
+            },
+            createdBy:req.user._id
+        })
+        return res.status(200).json(
+            new ApiResponse(200,todos,"Todos fetched successfully")
+        )
+    } catch (error) {
+        console.log(error)
+        res.status(500).json(
+            new ApiResponse(500,{},"Something went wrong while searching the todo")
+        );
+    }
+})
 
 export {
     createTodo,
     modifyTodo,
     deleteTodo,
     getAllTodos,
-    getTodo
+    getTodo,
+    searchTodo
 }

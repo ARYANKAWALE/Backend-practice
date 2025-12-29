@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import registerBg from '../assets/images/registerbg.png'
 
 const Login = () => {
     const [data, setData] = useState({
@@ -53,6 +54,7 @@ const Login = () => {
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-[#fafafa] text-white">
+            <img src={registerBg} alt="" className='absolute top-0 left-0 w-full h-full object-cover -z-0' />
             {toast.show && (
                 <div className="position-fixed top-0 end-0 p-3" style={{ zIndex: 11 }}>
                     <div className={`toast show align-items-center text-white bg-${toast.type} border-0`} role="alert" aria-live="assertive" aria-atomic="true">
@@ -68,7 +70,7 @@ const Login = () => {
             )}
             <form
                 onSubmit={handleSubmit}
-                className="flex flex-col gap-4 p-8 border border-gray-700 rounded-lg min-w-[400px] bg-[#ffffffaa]"
+                className="flex flex-col gap-4 p-8 border border-gray-700 rounded-lg min-w-[400px] bg-[#ffffffaa] relative z-10"
             >
                 <h1 className="text-2xl font-bold mb-4 text-black text-center">Login</h1>
                 <div className="flex flex-col gap-2 text-black">
